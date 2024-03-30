@@ -1,4 +1,4 @@
-package org.chatroomweb.chatroomwebback;
+package org.chatroomweb;
 
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
