@@ -35,6 +35,9 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    compileOnly 'jakarta.websocket:jakarta.websocket-api:2.1.1'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-websocket:10.0.20'
 }
 
 test {
