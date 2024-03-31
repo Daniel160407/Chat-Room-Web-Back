@@ -2,11 +2,13 @@ package org.chatroomweb.socket;
 
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
+import org.chatroomweb.dao.MySQLController;
 import org.chatroomweb.message.Message;
 import org.chatroomweb.notification.Notification;
 import org.chatroomweb.notification.NotificationMessage;
 import org.chatroomweb.notification.NotificationType;
 import org.chatroomweb.message.PrivateMessage;
+import org.chatroomweb.request.GetUserBySidRequest;
 import org.chatroomweb.util.MessageDecoder;
 import org.chatroomweb.util.MessageEncoder;
 
@@ -21,6 +23,7 @@ import java.util.Map;
 )
 public class ChatEndpoint {
     private static final Map<String, Session> sessions = new HashMap<>();
+    private final MySQLController mySQLController = new MySQLController();
 
     private void sendMessage(Message message) throws EncodeException, IOException {
         if (message instanceof PrivateMessage privateMessage) {
@@ -55,7 +58,9 @@ public class ChatEndpoint {
     @OnClose
     public void onClose(Session session) {
         sessions.remove(session.getId());
-        sendMessage(new Notification(NotificationType.USERLEFT, NotificationMessage.onUserLeaveNotification(), sessions.size())); //TODO: Enter name of left user
+        sendMessage(new Notification(NotificationType.USERLEFT, NotificationMessage.onUserLeaveNotification(
+                mySQLController.getUserName(new GetUserBySidRequest(session.getId()))), sessions.size())
+        );
     }
 
     @OnMessage
@@ -65,6 +70,7 @@ public class ChatEndpoint {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        System.err.println("Websocket error for: " + session.getId() + ". With error message: " + throwable.getMessage()); //TODO: Replace getId on user name
+        System.err.println("Websocket error for: " + mySQLController.getUserName(new GetUserBySidRequest(session.getId()))
+                + ". With error message: " + throwable.getMessage());
     }
 }

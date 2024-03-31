@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import lombok.Getter;
 import org.chatroomweb.model.Room;
+import org.chatroomweb.model.User;
 
 @Getter
 public class JDBCConnector {
@@ -17,8 +18,12 @@ public class JDBCConnector {
     private final EntityTransaction entityTransaction = entityManager.getTransaction();
 
     private final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-    private CriteriaQuery<Room> criteriaQuery = criteriaBuilder.createQuery(Room.class);
-    private Root<Room> root = criteriaQuery.from(Room.class);
+
+    private CriteriaQuery<Room> roomCriteriaQuery = criteriaBuilder.createQuery(Room.class);
+    private CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
+
+    private Root<Room> roomRoot = roomCriteriaQuery.from(Room.class);
+    private Root<User> userRoot = userCriteriaQuery.from(User.class);
 
 
     public static JDBCConnector instance;
@@ -30,8 +35,13 @@ public class JDBCConnector {
         return instance;
     }
 
-    public void initializeCriteria() {
-        criteriaQuery = criteriaBuilder.createQuery(Room.class);
-        root = criteriaQuery.from(Room.class);
+    public void initializeRoomCriteria() {
+        roomCriteriaQuery = criteriaBuilder.createQuery(Room.class);
+        roomRoot = roomCriteriaQuery.from(Room.class);
+    }
+
+    public void initializeUserCriteria() {
+        userCriteriaQuery = criteriaBuilder.createQuery(User.class);
+        userRoot = userCriteriaQuery.from(User.class);
     }
 }
