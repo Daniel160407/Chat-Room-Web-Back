@@ -13,7 +13,7 @@ import org.chatroomweb.model.User;
 
 @Getter
 public class JDBCConnector {
-    private final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("anonbook");
+    private final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("chat_room");
     private final EntityManager entityManager = entityManagerFactory.createEntityManager();
     private final EntityTransaction entityTransaction = entityManager.getTransaction();
 

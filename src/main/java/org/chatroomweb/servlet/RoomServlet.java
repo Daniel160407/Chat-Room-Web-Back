@@ -15,13 +15,18 @@ import java.io.PrintWriter;
 public class RoomServlet extends HttpServlet {
     private final MySQLController mySQLController = new MySQLController();
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/json");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
         PrintWriter printWriter = response.getWriter();
         printWriter.println(new ObjectMapper().writeValueAsString(mySQLController.getRooms()));
     }
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/json");
 
