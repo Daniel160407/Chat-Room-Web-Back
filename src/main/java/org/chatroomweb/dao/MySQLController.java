@@ -40,7 +40,7 @@ public class MySQLController implements JDBCController {
         try {
             jdbcConnector.getEntityTransaction().begin();
 
-            Room room = new Room(newRoom.maxMembers(), newRoom.name());
+            Room room = new Room(newRoom.name(), newRoom.maxMembers());
             jdbcConnector.getEntityManager().merge(room);
 
             jdbcConnector.getEntityTransaction().commit();
