@@ -11,6 +11,7 @@ import org.chatroomweb.message.PrivateMessage;
 import org.chatroomweb.request.GetUserBySidRequest;
 import org.chatroomweb.util.MessageDecoder;
 import org.chatroomweb.util.MessageEncoder;
+import org.chatroomweb.util.NotificationEncoder;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,25 +40,19 @@ public class ChatEndpoint {
         }
     }
 
-    private void sendMessage(Notification notification) {
-        sessions.forEach((key, value) -> {
-            try {
-                value.getBasicRemote().sendObject(notification);
-            } catch (IOException | EncodeException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
     @OnOpen
-    public void onOpen(Session session) {
+    public void onOpen(Session session) throws EncodeException, IOException {
+        System.out.println("Opened");
         sessions.put(session.getId(), session);
-        sendMessage(new Notification(NotificationType.USERENTERED, NotificationMessage.getOnUserEnter(), sessions.size()));
+
+        Message message = new Notification(NotificationType.USERENTERED, NotificationMessage.getOnUserEnter(), sessions.size());
+        sendMessage(message);
     }
 
     @OnClose
-    public void onClose(Session session) {
+    public void onClose(Session session) throws EncodeException, IOException {
         sessions.remove(session.getId());
+
         sendMessage(new Notification(NotificationType.USERLEFT, NotificationMessage.onUserLeaveNotification(
                 mySQLController.getUserName(new GetUserBySidRequest(session.getId()))), sessions.size())
         );
@@ -70,7 +65,6 @@ public class ChatEndpoint {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        System.err.println("Websocket error for: " + mySQLController.getUserName(new GetUserBySidRequest(session.getId()))
-                + ". With error message: " + throwable.getMessage());
+        System.out.println("MyError: " + throwable.getMessage());
     }
 }

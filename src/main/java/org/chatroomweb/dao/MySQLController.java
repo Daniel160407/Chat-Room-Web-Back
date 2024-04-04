@@ -56,6 +56,7 @@ public class MySQLController implements JDBCController {
     public String getUserName(GetUserBySidRequest getUserBySidRequest) {
         jdbcConnector.initializeUserCriteria();
 
+        System.out.println(getUserBySidRequest.sid());
         CriteriaQuery<User> select = jdbcConnector.getUserCriteriaQuery().select(
                 jdbcConnector.getUserRoot()
         ).where(jdbcConnector.getCriteriaBuilder().equal(jdbcConnector.getUserRoot().get("sid"), getUserBySidRequest.sid()));
