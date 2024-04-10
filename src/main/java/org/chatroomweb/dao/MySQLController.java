@@ -57,14 +57,18 @@ public class MySQLController implements JDBCController {
         jdbcConnector.initializeUserCriteria();
 
         System.out.println(getUserBySidRequest.sid());
-        CriteriaQuery<User> select = jdbcConnector.getUserCriteriaQuery().select(
-                jdbcConnector.getUserRoot()
-        ).where(jdbcConnector.getCriteriaBuilder().equal(jdbcConnector.getUserRoot().get("sid"), getUserBySidRequest.sid()));
+        try {
+            CriteriaQuery<User> select = jdbcConnector.getUserCriteriaQuery().select(
+                    jdbcConnector.getUserRoot()
+            ).where(jdbcConnector.getCriteriaBuilder().equal(jdbcConnector.getUserRoot().get("sid"), getUserBySidRequest.sid()));
 
-        TypedQuery<User> typedQuery = jdbcConnector.getEntityManager().createQuery(select);
+            TypedQuery<User> typedQuery = jdbcConnector.getEntityManager().createQuery(select);
 
-        User user = typedQuery.getSingleResult();
-        return user.getUserName();
+            User user = typedQuery.getSingleResult();
+            return user.getUserName();
+        } catch (Exception e) {
+            return "User";
+        }
     }
 
     @Override

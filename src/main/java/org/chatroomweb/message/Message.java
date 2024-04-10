@@ -2,6 +2,7 @@ package org.chatroomweb.message;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.ToString;
 import org.chatroomweb.notification.Notification;
 
 @JsonTypeInfo(
