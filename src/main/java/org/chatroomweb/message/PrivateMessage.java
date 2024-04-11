@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PrivateMessage implements Message{
     private String sid;
+    private String sender;
     private String receiver;
     private String message;
 
@@ -18,6 +19,7 @@ public class PrivateMessage implements Message{
     public String toString() {
         return "PrivateMessage{" +
                 "sid='" + sid + '\'' +
+                ", sender='" + sender + '\'' +
                 ", receiver='" + receiver + '\'' +
                 ", message='" + message + '\'' +
                 '}';

@@ -10,12 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class PublicMessage implements Message{
+    private String sender;
     private String message;
 
     @Override
     public String toString() {
         return "PublicMessage{" +
-                "message='" + message + '\'' +
+                "sender='" + sender + '\'' +
+                ", message='" + message + '\'' +
                 '}';
     }
 }
