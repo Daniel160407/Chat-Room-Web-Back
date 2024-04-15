@@ -17,7 +17,7 @@ public class RoomServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/json");
+        response.setContentType("application/json");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "GET");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -33,7 +33,7 @@ public class RoomServlet extends HttpServlet {
         String name = request.getParameter("name");
         Integer maxMembers = Integer.valueOf(request.getParameter("maxMembers"));
 
-        mySQLController.addRoom(new AddNewRoomRequest(name, maxMembers));
+        mySQLController.addRoom(new AddNewRoomRequest(name, maxMembers, 0));
 
         PrintWriter printWriter = response.getWriter();
         printWriter.println(new ObjectMapper().writeValueAsString(mySQLController.getRooms()));

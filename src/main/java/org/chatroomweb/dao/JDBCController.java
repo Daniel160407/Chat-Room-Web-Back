@@ -1,9 +1,7 @@
 package org.chatroomweb.dao;
 
-import org.chatroomweb.request.AddNewRoomRequest;
-import org.chatroomweb.request.AddNewUserRequest;
-import org.chatroomweb.request.GetUserBySidRequest;
-import org.chatroomweb.request.RemoveUserBySidRequest;
+import org.chatroomweb.request.*;
+import org.chatroomweb.response.GetCurrentRoomMembersResponse;
 import org.chatroomweb.response.GetRoomsResponse;
 
 import java.util.List;
@@ -12,6 +10,12 @@ public interface JDBCController {
     List<GetRoomsResponse> getRooms();
 
     void addRoom(AddNewRoomRequest newRoom);
+
+    void changeCurrentRoomMembers(ChangeRoomCurrentMembersRequest changeRoomCurrentMembersRequest);
+
+    void decreaseCurrentRoomMembers();
+
+    List<GetCurrentRoomMembersResponse> getCurrentRoomMembersAmount();
 
     String getUserName(GetUserBySidRequest getUserBySidRequest);
 

@@ -25,7 +25,6 @@ import java.util.Set;
 )
 public class ChatEndpoint {
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<>());
-    private final MySQLController mySQLController = new MySQLController();
 
     private void sendMessageToAll(Session session, Message message) {
         synchronized (sessions) {
@@ -51,17 +50,18 @@ public class ChatEndpoint {
         System.out.println("WebSocket connected: " + session.getId());
         sessions.add(session);
 
-        System.out.println(session.isOpen());
         Message message = new Notification(NotificationType.USERENTERED, NotificationMessage.getOnUserEnter(), sessions.size());
         sendMessageToAll(session, message);
-
     }
 
     @OnClose
-    public void onClose(Session session) {
+    public void onClose(Session session) throws IOException {
         System.out.println("WebSocket disconnected: " + session.getId());
         sessions.remove(session);
-        System.out.println("Size: " + sessions.size());
+        session.close();
+
+        Message message = new Notification(NotificationType.USERLEFT, NotificationMessage.onUserLeaveNotification(), sessions.size());
+        sendMessageToAll(session, message);
     }
 
     @OnMessage
