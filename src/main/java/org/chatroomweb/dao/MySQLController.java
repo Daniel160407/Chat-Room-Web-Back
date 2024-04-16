@@ -55,7 +55,7 @@ public class MySQLController implements JDBCController {
     }
 
     @Override
-    public void changeCurrentRoomMembers(ChangeRoomCurrentMembersRequest changeRoomCurrentMembersRequest) {
+    public boolean changeCurrentRoomMembers(ChangeRoomCurrentMembersRequest changeRoomCurrentMembersRequest) {
         jdbcConnector.initializeRoomCriteria();
 
         Room roomToBeUpdated = null;
@@ -71,14 +71,17 @@ public class MySQLController implements JDBCController {
             e.printStackTrace();
         }
 
-
+        boolean updated = false;
         if (roomToBeUpdated != null) {
             try {
-                jdbcConnector.getEntityTransaction().begin();
+                if (roomToBeUpdated.getCurrentMembers() < roomToBeUpdated.getMaxMembers()
+                        || roomToBeUpdated.getCurrentMembers() > changeRoomCurrentMembersRequest.amount()) {
 
-                roomToBeUpdated.setCurrentMembers(changeRoomCurrentMembersRequest.amount());
-
-                jdbcConnector.getEntityTransaction().commit();
+                    jdbcConnector.getEntityTransaction().begin();
+                    roomToBeUpdated.setCurrentMembers(changeRoomCurrentMembersRequest.amount());
+                    jdbcConnector.getEntityTransaction().commit();
+                    updated = true;
+                }
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 if (jdbcConnector.getEntityTransaction().isActive()) {
@@ -86,13 +89,8 @@ public class MySQLController implements JDBCController {
                 }
             }
         }
-    }
 
-    @Override
-    public void decreaseCurrentRoomMembers(){
-        jdbcConnector.initializeRoomCriteria();
-
-
+        return updated;
     }
 
     @Override
@@ -133,6 +131,11 @@ public class MySQLController implements JDBCController {
         } catch (Exception e) {
             return "User";
         }
+    }
+
+    @Override
+    public List<String> getAllUsers() {
+        return null;
     }
 
     @Override

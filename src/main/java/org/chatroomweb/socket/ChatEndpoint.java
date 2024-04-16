@@ -3,13 +3,13 @@ package org.chatroomweb.socket;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import org.chatroomweb.dao.MySQLController;
+import org.chatroomweb.message.ChangeUsernameMessage;
 import org.chatroomweb.message.Message;
+import org.chatroomweb.message.PublicMessage;
 import org.chatroomweb.notification.Notification;
 import org.chatroomweb.notification.NotificationMessage;
 import org.chatroomweb.notification.NotificationType;
-import org.chatroomweb.message.PrivateMessage;
 import org.chatroomweb.request.AddNewUserRequest;
-import org.chatroomweb.request.GetUserBySidRequest;
 import org.chatroomweb.util.MessageDecoder;
 import org.chatroomweb.util.MessageEncoder;
 
@@ -25,6 +25,7 @@ import java.util.Set;
 )
 public class ChatEndpoint {
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<>());
+    private final MySQLController mySQLController = new MySQLController();
 
     private void sendMessageToAll(Session session, Message message) {
         synchronized (sessions) {
@@ -35,7 +36,6 @@ public class ChatEndpoint {
             }
         }
     }
-
 
     private void sendMessage(Session session, Message message) {
         try {
@@ -67,7 +67,12 @@ public class ChatEndpoint {
     @OnMessage
     public void onMessage(Message message, Session session) {
         System.out.println("Received message from " + session.getId() + ": " + message);
-        sendMessageToAll(session, message);
+        if (message instanceof ChangeUsernameMessage changeUsernameMessage) {
+            mySQLController.addUser(new AddNewUserRequest(session.getId(), changeUsernameMessage.getUsername()));
+            System.err.println("Came");
+        } else {
+            sendMessageToAll(session, message);
+        }
     }
 
     @OnError

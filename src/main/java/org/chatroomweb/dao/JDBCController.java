@@ -11,13 +11,13 @@ public interface JDBCController {
 
     void addRoom(AddNewRoomRequest newRoom);
 
-    void changeCurrentRoomMembers(ChangeRoomCurrentMembersRequest changeRoomCurrentMembersRequest);
-
-    void decreaseCurrentRoomMembers();
+    boolean changeCurrentRoomMembers(ChangeRoomCurrentMembersRequest changeRoomCurrentMembersRequest);
 
     List<GetCurrentRoomMembersResponse> getCurrentRoomMembersAmount();
 
     String getUserName(GetUserBySidRequest getUserBySidRequest);
+
+    List<String> getAllUsers();
 
     void addUser(AddNewUserRequest newUser);
 

@@ -35,27 +35,18 @@ public class RoomMembersServlet extends HttpServlet {
         response.setContentType("application/json");
 
         String roomName = request.getParameter("roomName");
-        String currentMembersParam = request.getParameter("currentMembers");
-        int currentMembers = 0;
-
-        try {
-            currentMembers = Integer.parseInt(currentMembersParam);
-        } catch (NumberFormatException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            PrintWriter out = response.getWriter();
-            out.println("{\"error\": \"Invalid currentMembers parameter\"}");
-            out.close();
-            return;
-        }
+        int currentMembers = Integer.parseInt(request.getParameter("currentMembers"));
 
         System.err.println(roomName);
         System.err.println(currentMembers);
-        mySQLController.changeCurrentRoomMembers(new ChangeRoomCurrentMembersRequest(roomName, currentMembers));
 
-        response.setStatus(HttpServletResponse.SC_OK);
-        PrintWriter out = response.getWriter();
-        out.println("{\"message\": \"Current members updated successfully\"}");
-        out.close();
+        boolean updated = mySQLController.changeCurrentRoomMembers(new ChangeRoomCurrentMembersRequest(roomName, currentMembers));
+
+        if (updated) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
     }
 
     @Override

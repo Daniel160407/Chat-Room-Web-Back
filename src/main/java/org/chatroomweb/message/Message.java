@@ -12,7 +12,8 @@ import org.chatroomweb.notification.Notification;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = PrivateMessage.class, name = "PrivateMessage"),
         @JsonSubTypes.Type(value = PublicMessage.class, name = "PublicMessage"),
-        @JsonSubTypes.Type(value = Notification.class, name = "Notification")
+        @JsonSubTypes.Type(value = Notification.class, name = "Notification"),
+        @JsonSubTypes.Type(value = ChangeUsernameMessage.class, name = "ChangeUsernameMessage")
 })
 public interface Message {
 }

@@ -23,12 +23,13 @@ public class RoomServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
         PrintWriter printWriter = response.getWriter();
+        System.out.println(new ObjectMapper().writeValueAsString(mySQLController.getRooms()));
         printWriter.println(new ObjectMapper().writeValueAsString(mySQLController.getRooms()));
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/json");
+        response.setContentType("application/json");
 
         String name = request.getParameter("name");
         Integer maxMembers = Integer.valueOf(request.getParameter("maxMembers"));
