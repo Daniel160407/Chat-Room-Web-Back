@@ -6,5 +6,7 @@
     <file url="file://$PROJECT_DIR$/flyway/sql/V1_202403312312__Change_id_type.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/flyway/sql/V1_202404012301__Rename_rooms_table.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/flyway/sql/V1_202404121323__Add_current_members_column.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/flyway/sql/V1_202404172016__Add_id_column_in_user_table.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/flyway/sql/V1_202404172021__Add_sid_column.sql" dialect="GenericSQL" />
   </component>
 </project>

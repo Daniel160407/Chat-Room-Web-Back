@@ -1,0 +1,2 @@
+ALTER TABLE `chat_room`.`user`
+    CHANGE COLUMN `sid` `id` INT NOT NULL AUTO_INCREMENT;

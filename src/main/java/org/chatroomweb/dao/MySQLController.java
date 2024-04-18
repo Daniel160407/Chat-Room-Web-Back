@@ -134,7 +134,42 @@ public class MySQLController implements JDBCController {
     }
 
     @Override
+    public String getSidByUsername(String username) {
+        jdbcConnector.initializeUserCriteria();
+
+        try {
+            CriteriaQuery<User> select = jdbcConnector.getUserCriteriaQuery().select(
+                    jdbcConnector.getUserRoot()
+            ).where(jdbcConnector.getCriteriaBuilder().equal(jdbcConnector.getUserRoot().get("userName"), username));
+
+            TypedQuery<User> typedQuery = jdbcConnector.getEntityManager().createQuery(select);
+
+            User user = typedQuery.getSingleResult();
+            return user.getSid();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public List<String> getAllUsers() {
+        jdbcConnector.initializeUserCriteria();
+
+        try {
+            CriteriaQuery<User> select = jdbcConnector.getUserCriteriaQuery().select(
+                    jdbcConnector.getUserRoot()
+            );
+
+            TypedQuery<User> typedQuery = jdbcConnector.getEntityManager().createQuery(select);
+
+            List<User> usernames = typedQuery.getResultList();
+            List<String> usernameList = new ArrayList<>();
+            usernames.forEach(username -> usernameList.add(username.getUserName()));
+            return usernameList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -145,6 +180,7 @@ public class MySQLController implements JDBCController {
         try {
             jdbcConnector.getEntityTransaction().begin();
 
+            System.err.println(newUser.sid());
             User user = new User(newUser.sid(), newUser.userName());
             jdbcConnector.getEntityManager().merge(user);
 
@@ -167,4 +203,5 @@ public class MySQLController implements JDBCController {
             jdbcConnector.getEntityManager().remove(userToBeRemoved);
         }
     }
+
 }

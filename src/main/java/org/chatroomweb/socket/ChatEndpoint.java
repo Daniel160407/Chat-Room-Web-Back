@@ -5,11 +5,13 @@ import jakarta.websocket.server.ServerEndpoint;
 import org.chatroomweb.dao.MySQLController;
 import org.chatroomweb.message.ChangeUsernameMessage;
 import org.chatroomweb.message.Message;
+import org.chatroomweb.message.PrivateMessage;
 import org.chatroomweb.message.PublicMessage;
 import org.chatroomweb.notification.Notification;
 import org.chatroomweb.notification.NotificationMessage;
 import org.chatroomweb.notification.NotificationType;
 import org.chatroomweb.request.AddNewUserRequest;
+import org.chatroomweb.request.RemoveUserBySidRequest;
 import org.chatroomweb.util.MessageDecoder;
 import org.chatroomweb.util.MessageEncoder;
 
@@ -58,6 +60,7 @@ public class ChatEndpoint {
     public void onClose(Session session) throws IOException {
         System.out.println("WebSocket disconnected: " + session.getId());
         sessions.remove(session);
+        mySQLController.removeUser(new RemoveUserBySidRequest(session.getId()));
         session.close();
 
         Message message = new Notification(NotificationType.USERLEFT, NotificationMessage.onUserLeaveNotification(), sessions.size());
@@ -68,10 +71,19 @@ public class ChatEndpoint {
     public void onMessage(Message message, Session session) {
         System.out.println("Received message from " + session.getId() + ": " + message);
         if (message instanceof ChangeUsernameMessage changeUsernameMessage) {
+            System.out.println(session.getId());
+            System.out.println(changeUsernameMessage.getUsername());
             mySQLController.addUser(new AddNewUserRequest(session.getId(), changeUsernameMessage.getUsername()));
             System.err.println("Came");
-        } else {
+        } else if (message instanceof PublicMessage || message instanceof Notification) {
             sendMessageToAll(session, message);
+        } else if (message instanceof PrivateMessage) {
+            String receiverSid = mySQLController.getSidByUsername(((PrivateMessage) message).getReceiver());
+            for (Session receiverSession : sessions) {
+                if (receiverSession.getId().equals(receiverSid)) {
+                    sendMessage(receiverSession, message);
+                }
+            }
         }
     }
 

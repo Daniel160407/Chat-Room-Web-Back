@@ -7,8 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @ToString
-public class PrivateMessage implements Message{
-    private String sid;
+public class PrivateMessage implements Message {
     private String roomName;
     private String sender;
     private String receiver;

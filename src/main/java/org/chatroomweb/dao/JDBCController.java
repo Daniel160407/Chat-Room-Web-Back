@@ -17,6 +17,8 @@ public interface JDBCController {
 
     String getUserName(GetUserBySidRequest getUserBySidRequest);
 
+    String getSidByUsername(String username);
+
     List<String> getAllUsers();
 
     void addUser(AddNewUserRequest newUser);
